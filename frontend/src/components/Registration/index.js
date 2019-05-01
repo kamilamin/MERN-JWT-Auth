@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
+import { registerUser } from "../../redux/actions/authentication";
 
 class Register extends Component {
   state = {
@@ -12,12 +16,25 @@ class Register extends Component {
   handleSubmit = ev => {
     ev.preventDefault();
     const { name, email, password, confirmPassword } = this.state;
-    console.log(name, email, password, confirmPassword);
+    const user = {
+      name,
+      email,
+      password,
+      confirmPassword
+    };
+    this.props.registerUser(user, this.props.history);
   };
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
   render() {
     return (
       <div className="container" style={{ marginTop: "50px", width: "700px" }}>
-        <h2>Registration</h2>
+        <h2 style={{ marginBottom: "40px" }}>Registration</h2>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <input
@@ -84,4 +101,15 @@ class Register extends Component {
   }
 }
 
-export default Register;
+Register.propTypes = {
+  registerUser: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(withRouter(Register));
