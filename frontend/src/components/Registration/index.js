@@ -16,6 +16,7 @@ class Register extends Component {
 
   handleSubmit = ev => {
     ev.preventDefault();
+    console.log('propss', this.props)
     const { name, email, password, confirmPassword } = this.state;
     const user = {
       name,
@@ -23,15 +24,22 @@ class Register extends Component {
       password,
       confirmPassword
     };
+    console.log("User", user)
     this.props.registerUser(user, this.props.history);
   };
   componentWillReceiveProps(nextProps) {
+    console.log("Next-", nextProps);
     if (nextProps.errors) {
       this.setState({
         errors: nextProps.errors
       });
     }
   }
+  // componentDidMount() {
+  //   if(this.props.auth.isAuthenticated) {
+  //     this.props.history.push('/');
+  //   }
+  // }
   render() {
     const { errors } = this.state;
     return (
@@ -74,7 +82,7 @@ class Register extends Component {
             <input
               type="password"
               placeholder="Password"
-              value={this.state.name}
+              value={this.state.password}
               className={classnames("form-control form-control-lg", {
                 "is-invalid": errors.password
               })}
@@ -104,7 +112,7 @@ class Register extends Component {
             />
             {errors.confirmPassword && (<div className="invalid-feedback">{errors.confirmPassword}</div>)}
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <button type="submit" className="btn btn-primary">
               Register User
             </button>
